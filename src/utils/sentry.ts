@@ -5,7 +5,7 @@ type Loglevel = 'fatal' | 'error' | 'warning' | 'info' | 'debug';
 export function logEvent(
     message: string,
     category: string = 'general',
-    data?: Record<string, any>,
+    data?: Record<string, unknown>,
     level: Loglevel = 'info',
     error?: unknown
 ){

@@ -1,10 +1,8 @@
 'use server';
 
-import * as Sentry from '@sentry/nextjs';
 import { prisma } from '@/db/prisma';
 import { revalidatePath } from 'next/cache';
 import { logEvent } from '@/utils/sentry';
-import { getPriorityClass } from '@/utils/ui';
 import { getCurrentUser } from '@/lib/current-user';
 
 export async function createTicket(prevState: {success: boolean; message: string}, formData: FormData) : Promise<{success: boolean; message: string}> {

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { getPriorityClass } from "@/utils/ui";
 import type { Ticket } from "@/generated/prisma/client";
