@@ -15,6 +15,7 @@ enum Role{
 }
 
 
+
 // @id is for primary id
 // cuid will generate long unique random string that will have numbers and letters. It is more secure
 // name String? means it is optional

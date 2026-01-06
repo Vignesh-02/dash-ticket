@@ -4,6 +4,7 @@ import { prisma } from "@/db/prisma";
 import { revalidatePath } from "next/cache";
 import { logEvent } from "@/utils/sentry";
 import { getCurrentUser } from "@/lib/current-user";
+import { PRIORITY_ORDER } from "@/lib/priority";
 
 export async function createTicket(
     prevState: { success: boolean; message: string },
@@ -123,6 +124,12 @@ export async function getTickets() {
             },
         });
 
+        // PRIMARY sort: High → Medium → Low
+        tickets.sort(
+            (a, b) =>
+                PRIORITY_ORDER[a.priority as keyof typeof PRIORITY_ORDER] -
+                PRIORITY_ORDER[b.priority as keyof typeof PRIORITY_ORDER]
+        );
         logEvent(
             "Fetched Ticket list",
             "ticket",
