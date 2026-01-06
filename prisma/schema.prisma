@@ -1,25 +1,41 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+    provider = "prisma-client"
+    output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+//   url      = env("DATABASE_URL")
+}
+
+
+// @id is for primary id
+// cuid will generate long unique random string that will have numbers and letters. It is more secure
+// name String? means it is optional
+
+model User{
+    id          String      @id @default(cuid())
+    email       String      @unique
+    name        String?
+    password    String
+    createdAt   DateTime    @default(now())
+    updated     DateTime    @updatedAt
+    tickets     Ticket[]
 }
 
 model Ticket {
-    id      Int     @id @default(autoincrement())
-    subject String
+    id          Int     @id @default(autoincrement())
+    subject     String
     description String
     priority    String
     status      String      @default("Open")
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
+    userId      String
+    user        User        @relation(fields: [userId], references: [id])
 }
+// We are creating a relationship between tickets and users
+
+
+
