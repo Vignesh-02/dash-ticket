@@ -1,17 +1,20 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { logEvent } from '@/utils/sentry';
-import { Sign } from 'crypto';
-import { log } from 'console';
+
 
 // to use the auth secret with jose, we need to encode the secret
 const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
 
 const cookieName = 'auth-token';
 
+export type AuthTokenPayload = {
+  userId: string;
+};
+
 
 //Encrypt and sign token
-export async function signAuthToken(payload: any){
+export async function signAuthToken(payload: AuthTokenPayload){
     try{
         const token = await new SignJWT(payload)
             .setProtectedHeader({alg: 'HS256'})

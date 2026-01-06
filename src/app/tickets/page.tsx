@@ -1,5 +1,4 @@
 import { getTickets } from "../actions/tickets.actions";
-import Link from "next/link";
 import { getCurrentUser } from "@/lib/current-user";
 import { redirect } from "next/navigation";
 import TicketItem from "@/components/TicketItem";
