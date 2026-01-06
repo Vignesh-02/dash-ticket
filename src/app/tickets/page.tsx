@@ -31,7 +31,8 @@ const TicketsPage = async () => {
             ) : (
                 <div className="space-y-4 max-3-yl mx-auto">
                     { tickets.map((ticket) => (
-                        <TicketItem key={ticket.id} ticket={ticket} />
+                        <TicketItem key={ticket.id} ticket={ticket}
+                            isAdmin={user?.role === 'ADMIN'} />
                     ))}
                 </div>
             )}
