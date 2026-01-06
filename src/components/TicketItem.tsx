@@ -2,15 +2,20 @@
 
 import Link from "next/link";
 import { getPriorityClass } from "@/utils/ui";
-import type { Ticket } from "@/generated/prisma/client";
+import type { Ticket, User } from "@/generated/prisma/client";
 import DeleteTicketButton from "./DeleteTicketButton";
 import UpdateTicketButton from "./UpdateTicketButton";
 
-type TicketItemProps = {
-    ticket: Ticket;
+type TicketWithUser = Ticket & {
+    user?: Pick<User, "name" | "email">;
 };
 
-const TicketItem = ({ ticket }: TicketItemProps) => {
+type TicketItemProps = {
+    ticket: TicketWithUser;
+    isAdmin: boolean;
+};
+
+const TicketItem = ({ ticket, isAdmin }: TicketItemProps) => {
     const isClosed = ticket.status === "Closed";
 
     // const [showConfirm, setShowConfirm] = useState<boolean>(false);
@@ -25,37 +30,37 @@ const TicketItem = ({ ticket }: TicketItemProps) => {
         <>
             <div
                 key={ticket.id}
-                className={`flex justify-between items-center bg-white rounded-lg shadow border border-gray-200 p-6 ${
+                className={`flex flex-row flex-wrap justify-between items-center bg-white rounded-lg shadow border border-gray-200 px-4 py-3 sm:px-6 ${
                     isClosed ? "opacity-50" : ""
                 }`}
             >
                 {/* Left Side */}
-                <div>
-                    <h2 className="text-xl font-semibold text-blue-600">
+
+                <div className="flex flex-col sm:flex-row   flex-wrap items-center gap-3 min-w-0 flex-1 mt-14">
+                    <h2 className="text-xl font-semibold text-blue-600 sm:text-lg max-w-full truncate">
                         {ticket.subject}
                     </h2>
+
+                    {isAdmin && ticket.user?.name && (
+                        <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded truncate">
+                        {ticket.user.name}
+                        </span>
+                    )}
                 </div>
                 {/* Right Side */}
-                <div className="text-right space-y-2">
-                    <div className="text-sm text-gray-500">
+                <div className="flex flex-col justify-between items-end gap-2 space-y-2">
+                    <div className="text-sm text-gray-500 px-3 py-1" >
                         Priority:{" "}
                         <span className={getPriorityClass(ticket.priority)}>
                             {ticket.priority}
                         </span>
                     </div>
-                    {/* <button
-                        onClick={() => setShowConfirm(true)}
-                        className={`inline-block mx-6 mt-2 text-sm px-3 py-1 rounded transition text-center
-              bg-red-600 text-white
-              hover:bg-red-700
-              active:bg-red-800]
-              cursor-pointer`}
-                    >
-                        Delete
-                    </button> */}
-                    <UpdateTicketButton ticketId={ticket.id} />
-                    <DeleteTicketButton  ticketId={ticket.id} />
 
+                    
+                <div className="flex items-center gap-1 sm:gap-3">
+
+                    <UpdateTicketButton ticketId={ticket.id} />
+                    <DeleteTicketButton ticketId={ticket.id} />
 
                     <Link
                         href={`/tickets/${ticket.id}`}
@@ -69,36 +74,7 @@ const TicketItem = ({ ticket }: TicketItemProps) => {
                     </Link>
                 </div>
             </div>
-
-            {/* Confirmation Modal */}
-            {/* {showConfirm && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-80">
-                        <h3 className="text-lg font-semibold mb-2">
-                            Confirm Delete
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-4">
-                            Are you sure you want to delete this ticket?
-                        </p>
-
-                        <div className="flex justify-end gap-2">
-                            <button
-                                onClick={() => setShowConfirm(false)}
-                                className="px-3 py-1 rounded border cursor-pointer"
-                            >
-                                Cancel
-                            </button>
-
-                            <button
-                                onClick={handleDelete}
-                                className="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 cursor-pointer"
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )} */}
+            </div>
         </>
     );
 };
